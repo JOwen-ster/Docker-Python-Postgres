@@ -1,0 +1,35 @@
+services:
+  # Python Application Service
+  app:
+    build: . # Build the image from the Dockerfile in the current directory
+    container_name: Python_App
+    depends_on:
+      - db # Wait for the db container to start before starting the app
+    environment: # Make up come credentials and then remember them, docker will persist them after the first connection.
+      # These credentials must match what is under the db service environment
+      - DB_USER=appuser
+      - DB_PASS=appuser_pw
+      - DB_NAME=appdb
+      - DB_HOST=db # Connect to the db service created by Docker Compose
+      - DB_PORT=5432
+
+  # PostgreSQL Database Service
+  db:
+    image: postgres # Use the official Postgres image
+    container_name: PostgreSQL_Database
+    restart: always
+    environment:
+      # These variables are used by the postgres image to initialize the database
+      - POSTGRES_USER=appuser
+      - POSTGRES_PASSWORD=appuser_pw
+      - POSTGRES_DB=appdb
+    ports:
+      # Map port 5432 on the host to 5432 in the container for external access (optional)
+      - "5432:5432"
+    volumes:
+      # Persist database data even if the container is removed
+      - ./db/postgres_data:/var/lib/postgresql/data
+
+# Define a named volume for data persistence
+volumes:
+  postgres_data:
