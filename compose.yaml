@@ -5,7 +5,7 @@ services:
     container_name: Python_App
     depends_on:
       - db # Wait for the db container to start before starting the app
-    environment: # Make up come credentials and then remember them, docker will persist them after the first connection.
+    environment: # Make up some credentials and then remember them, docker will persist them after the first connection.
       # These credentials must match what is under the db service environment
       - DB_USER=appuser
       - DB_PASS=appuser_pw
